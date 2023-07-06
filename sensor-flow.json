@@ -1,0 +1,467 @@
+[
+    {
+        "id": "aedd3c6fed1f4311",
+        "type": "tab",
+        "label": "Sensor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "822a584d5c388e0c",
+        "type": "inject",
+        "z": "aedd3c6fed1f4311",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"messageId\":0,\"sessionId\":\"27d79d2d-66e7-4540-933f-92c461352270\",\"deviceId\":\"8e4f6b57-86fc-4eb8-9594-9cefbf6c3586\",\"payload\":[{\"name\":\"gravity\",\"values\":{\"z\":6.933424472808838,\"y\":6.846803665161133,\"x\":1.104217767715454},\"accuracy\":3,\"time\":1688358482536019500}]}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "7e8b322c5da5e745"
+            ]
+        ]
+    },
+    {
+        "id": "7e8b322c5da5e745",
+        "type": "exec",
+        "z": "aedd3c6fed1f4311",
+        "command": "sudo simple-linux",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 290,
+        "y": 360,
+        "wires": [
+            [
+                "8570a1fe3897f882",
+                "e99d406fb19a2d11"
+            ],
+            [
+                "c8233e60a6396fc6"
+            ],
+            [
+                "dfc60b700a3069fe"
+            ]
+        ]
+    },
+    {
+        "id": "1ed51076a634fb26",
+        "type": "influxdb out",
+        "z": "aedd3c6fed1f4311",
+        "influxdb": "2363319fe35db645",
+        "name": "",
+        "measurement": "gravity",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1120,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e99d406fb19a2d11",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 209",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 290,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "8570a1fe3897f882",
+        "type": "json",
+        "z": "aedd3c6fed1f4311",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 510,
+        "y": 340,
+        "wires": [
+            [
+                "aafa85ca1223947f",
+                "5c1fc174eb519aab"
+            ]
+        ]
+    },
+    {
+        "id": "7a199a20a544dfd2",
+        "type": "influxdb out",
+        "z": "aedd3c6fed1f4311",
+        "influxdb": "2363319fe35db645",
+        "name": "",
+        "measurement": "gyroscope",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1150,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "39bf07e24892391b",
+        "type": "comment",
+        "z": "aedd3c6fed1f4311",
+        "name": "Collect sensor data from your handset",
+        "info": "",
+        "x": 210,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "aafa85ca1223947f",
+        "type": "switch",
+        "z": "aedd3c6fed1f4311",
+        "name": "Parser",
+        "property": "payload.payload[0].name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "gravity",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "gyroscope",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "orientation",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "accelerometer",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 650,
+        "y": 340,
+        "wires": [
+            [
+                "ec8638448ff3e659"
+            ],
+            [
+                "4daae10a6d163ae2"
+            ],
+            [
+                "f19644e4fe479ddd"
+            ],
+            [
+                "4fe5e666bef0c0cb"
+            ]
+        ]
+    },
+    {
+        "id": "ec8638448ff3e659",
+        "type": "function",
+        "z": "aedd3c6fed1f4311",
+        "name": "json parser gravity",
+        "func": "var name = msg.payload.payload[0].name\n\nvar x = msg.payload.payload[0].values.x\n\nvar y = msg.payload.payload[0].values.y\n\nvar z = msg.payload.payload[0].values.z\n\nmsg.payload = {name,x,y,z}\n\nreturn(msg)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 180,
+        "wires": [
+            [
+                "617fe48f88ea643e",
+                "1ed51076a634fb26"
+            ]
+        ]
+    },
+    {
+        "id": "4daae10a6d163ae2",
+        "type": "function",
+        "z": "aedd3c6fed1f4311",
+        "name": "json parser gyroscope",
+        "func": "var name = msg.payload.payload[0].name\n\nvar x = msg.payload.payload[0].values.x\n\nvar y = msg.payload.payload[0].values.y\n\nvar z = msg.payload.payload[0].values.z\n\nmsg.payload = {name,x,y,z}\n\nreturn(msg)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 340,
+        "wires": [
+            [
+                "266c7b1d14d50850",
+                "7a199a20a544dfd2"
+            ]
+        ]
+    },
+    {
+        "id": "617fe48f88ea643e",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 212",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "266c7b1d14d50850",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 213",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "dfc60b700a3069fe",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 214",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 250,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "c8233e60a6396fc6",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 215",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 510,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "0715f967071c9b95",
+        "type": "comment",
+        "z": "aedd3c6fed1f4311",
+        "name": "Parse json",
+        "info": "Check the app for name and what parameters you want to log",
+        "x": 660,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5c1fc174eb519aab",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 217",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 610,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f19644e4fe479ddd",
+        "type": "function",
+        "z": "aedd3c6fed1f4311",
+        "name": "json parser orientation",
+        "func": "var name = msg.payload.payload[0].name\n\nvar x = msg.payload.payload[0].values.qx\n\nvar y = msg.payload.payload[0].values.qy\n\nvar z = msg.payload.payload[0].values.qz\n\nmsg.payload = {name,x,y,z}\n\nreturn(msg)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "c61787e6347a2bb0",
+                "0a168fdc86a6596c"
+            ]
+        ]
+    },
+    {
+        "id": "c61787e6347a2bb0",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 218",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "0a168fdc86a6596c",
+        "type": "influxdb out",
+        "z": "aedd3c6fed1f4311",
+        "influxdb": "2363319fe35db645",
+        "name": "",
+        "measurement": "orientation",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1170,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "4fe5e666bef0c0cb",
+        "type": "function",
+        "z": "aedd3c6fed1f4311",
+        "name": "json parser accelerometer",
+        "func": "var name = msg.payload.payload[0].name\n\nvar x = msg.payload.payload[0].values.x\n\nvar y = msg.payload.payload[0].values.y\n\nvar z = msg.payload.payload[0].values.z\n\nmsg.payload = {name,x,y,z}\n\nreturn(msg)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 600,
+        "wires": [
+            [
+                "e60432ae4ad2257e",
+                "73b8266ea85a131e"
+            ]
+        ]
+    },
+    {
+        "id": "73b8266ea85a131e",
+        "type": "influxdb out",
+        "z": "aedd3c6fed1f4311",
+        "influxdb": "2363319fe35db645",
+        "name": "",
+        "measurement": "accelerometer",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1180,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "e60432ae4ad2257e",
+        "type": "debug",
+        "z": "aedd3c6fed1f4311",
+        "name": "debug 219",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "2363319fe35db645",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "sensor",
+        "name": "sensor",
+        "usetls": false,
+        "tls": "dffcbfae.6e9d",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "dffcbfae.6e9d",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false
+    }
+]
