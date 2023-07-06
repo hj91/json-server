@@ -1,0 +1,34 @@
+{
+  "name": "json-server",
+  "version": "1.0.0",
+  "description": "A simple server written in nodejs to process data received from Sensor Logger android application - https://github.com/tszheichoi/awesome-sensor-logger",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hj91/json-server.git"
+  },
+  "keywords": [
+    "json",
+    "server",
+    "node.js",
+    "express",
+    "cluster"
+  ],
+  "author": {
+    "name": "Harshad Joshi",
+    "email": "harshad@bufferstack.io",
+    "url": "https://github.com/hj91"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/hj91/json-server/issues"
+  },
+  "homepage": "https://github.com/hj91/json-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
+
