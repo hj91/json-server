@@ -24,7 +24,6 @@ The server listens for POST requests on port 8484, logs the received JSON data t
 ## Usage
 
 Start the server:
-
     ```
     npm start
     ```
