@@ -1,10 +1,10 @@
 {
   "name": "json-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple server written in nodejs to process data received from Sensor Logger android application - https://github.com/tszheichoi/awesome-sensor-logger",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node test-server.js"
   },
   "repository": {
     "type": "git",
